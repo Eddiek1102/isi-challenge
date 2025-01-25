@@ -1,3 +1,4 @@
+# Contains implementation of the robot system class and its relevant methods.
 import random
 
 class Robot:
@@ -27,27 +28,29 @@ class Robot:
         """
         # Base amount for temperature increase (0.25 degrees celsius)
         base = 0.25
-        for i, temp in enumerate(self.subsystem_temperatures):
+        # Iterate through the subsystem's temperatures and increase them
+        for i, temperature in enumerate(self.subsystem_temperatures):
             # Get random multiplier temp increase between subsystems so that temperature change is not uniform
             mult = float(random.randint(1, 10))
             # Keep temperature within reasonable range for GUI purposes
-            if self.subsystem_temperatures[i] >= -20 and self.subsystem_temperatures[i] <= 120:
+            if temperature >= -20 and temperature <= 120:
                 self.subsystem_temperatures[i] += (base * mult)
     
     def decrease_system_temperature(self) -> None:
         """Decreases the subsystems' temperature
         """
-        # base multiplier used to determine temperature decrease according to fan speed
+        # Base multiplier used to determine temperature decrease according to fan speed
         base = 0.05
+        # Iterate through the subsystems' temperatures and decrease them
         for i, temp in enumerate(self.subsystem_temperatures):
-            # if temp below 25 degrees, run fans at 20% max speed
-            if self.subsystem_temperatures[i] < 25:
+            # If temp below 25 degrees, run fans at 20% max speed
+            if temp < 25:
                 fan_speed = self.max_fan_speed * 0.2
                 self.subsystem_temperatures[i] -= float(fan_speed * base)
-            # if temp above 75 degrees, run fans at 100% max speed
-            elif self.subsystem_temperatures[i] > 75:
+            # If temp above 75 degrees, run fans at 100% max speed
+            elif temp > 75:
                 self.subsystem_temperatures[i] -= float(self.max_fan_speed * base)
-            # if temp is between [25, 75] degrees, run fans at a percentage of the maximum
+            # If temp is between [25, 75] degrees, run fans at a percentage of the maximum
             else:
                 pass
                 

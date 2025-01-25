@@ -25,9 +25,13 @@ def main():
     fans_entry = tk.Entry(root)
     fans_entry.pack(padx = 0, pady = 10)
     
-    # Create enter button
+    # Create enter button to submit user-selected parameters for the system
     enter_button = tk.Button(root, text = "Enter")
     enter_button.pack(padx = 0, pady = 20)
+    
+    # Create robot system
+    bot = Robot(10, 10, 300)
+    print(bot)
     
     # Display GUI
     root.mainloop()
