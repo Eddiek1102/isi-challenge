@@ -1,5 +1,7 @@
+import random
+
 class Robot:
-    def __init__(self, num_subsystems, num_fans, fan_max_speed):
+    def __init__(self, num_subsystems, num_fans, max_fan_speed):
         """Initializes a new Robot.
 
         Args:
@@ -9,19 +11,58 @@ class Robot:
         """
         self.num_subsystems = num_subsystems
         self.num_fans = num_fans
-        self.fan_max_speed = fan_max_speed
-        self.subsystem_temperatures = [20.0] * num_subsystems
+        self.max_fan_speed = max_fan_speed
+        self.subsystem_temperatures = [80.0] * num_subsystems
     
-    
-    def __str__(self):
+    def __str__(self) -> str:
         """Equivalent to Java's toString - Returns string representation of a Robot object.
 
         Returns:
             str: Describes robot's elements.
         """
-        return f"Number of Subsystems: {self.num_subsystems}\nNumber of fans: {self.num_fans}\nFan Max Speed: {self.fan_max_speed}\nSubsystem Temperatures: {self.subsystem_temperatures}"
+        return f"Number of Subsystems: {self.num_subsystems}\nNumber of fans: {self.num_fans}\nFan Max Speed: {self.max_fan_speed}\nSubsystem Temperatures: {self.subsystem_temperatures}"
     
+    def increase_system_temperature(self) -> None:
+        """Increases the subsystems' temperature
+        """
+        # Base amount for temperature increase (0.25 degrees celsius)
+        base = 0.25
+        for i, temp in enumerate(self.subsystem_temperatures):
+            # Get random multiplier temp increase between subsystems so that temperature change is not uniform
+            mult = float(random.randint(1, 10))
+            # Keep temperature within reasonable range for GUI purposes
+            if self.subsystem_temperatures[i] >= -20 and self.subsystem_temperatures[i] <= 120:
+                self.subsystem_temperatures[i] += (base * mult)
     
+    def decrease_system_temperature(self) -> None:
+        """Decreases the subsystems' temperature
+        """
+        # base multiplier used to determine temperature decrease according to fan speed
+        base = 0.05
+        for i, temp in enumerate(self.subsystem_temperatures):
+            # if temp below 25 degrees, run fans at 20% max speed
+            if self.subsystem_temperatures[i] < 25:
+                fan_speed = self.max_fan_speed * 0.2
+                self.subsystem_temperatures[i] -= float(fan_speed * base)
+            # if temp above 75 degrees, run fans at 100% max speed
+            elif self.subsystem_temperatures[i] > 75:
+                self.subsystem_temperatures[i] -= float(self.max_fan_speed * base)
+            # if temp is between [25, 75] degrees, run fans at a percentage of the maximum
+            else:
+                pass
+                
+            
+        
+        
 if __name__ == "__main__":
-    r = Robot(5, 10, 200)
-    print(r)
+    """Ignore everything here. Used for testing purposes when developing.
+    """
+    bot = Robot(10, 10, 300)
+    print(bot)
+    for i in range(10):
+        bot.increase_system_temperature()
+    print(bot)
+    bot.decrease_system_temperature()
+    print(bot)
+    bot.decrease_system_temperature()
+    print(bot)

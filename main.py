@@ -2,13 +2,11 @@
 
 import tkinter as tk
 from isi_robot import Robot
-    
 
 def main():
     """ Main function used to simulate a running program
         and set-up the GUI.
     """
-    num_subsystems, num_fans, fan_max_speed = 0, 0, 0
     
     # Set up GUI's main frame
     root = tk.Tk()
@@ -26,6 +24,10 @@ def main():
     fans_label.pack(padx = 0, pady = 5)
     fans_entry = tk.Entry(root)
     fans_entry.pack(padx = 0, pady = 10)
+    
+    # Create enter button
+    enter_button = tk.Button(root, text = "Enter")
+    enter_button.pack(padx = 0, pady = 20)
     
     # Display GUI
     root.mainloop()
