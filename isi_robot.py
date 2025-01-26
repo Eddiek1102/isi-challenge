@@ -30,11 +30,16 @@ class Robot:
         base = 0.25
         # Iterate through the subsystem's temperatures and increase them
         for i, temperature in enumerate(self.subsystem_temperatures):
-            # Get random multiplier temp increase between subsystems so that temperature change is not uniform
+            # Get random multiplier for temp increase between subsystems so that temperature change is not uniform
             mult = float(random.randint(1, 10))
             # Keep temperature within reasonable range for GUI purposes
-            if temperature >= -20 and temperature <= 120:
+            if temperature < -20:
+                self.subsystem_temperatures[i] = -20
+            elif temperature > 120:
+                self.subsystem_temperatures[i] = 120
+            else:
                 self.subsystem_temperatures[i] += (base * mult)
+            
     
     def decrease_system_temperature(self) -> None:
         """Decreases the subsystems' temperature
@@ -42,17 +47,21 @@ class Robot:
         # Base multiplier used to determine temperature decrease according to fan speed
         base = 0.05
         # Iterate through the subsystems' temperatures and decrease them
-        for i, temp in enumerate(self.subsystem_temperatures):
+        for i, temperature in enumerate(self.subsystem_temperatures):
+            # Get random multiplier for temp decrease between subsystems so that temperature change is not uniform
+            mult = float(random.randint(1, 10))
             # If temp below 25 degrees, run fans at 20% max speed
-            if temp < 25:
+            if temperature < 25:
                 fan_speed = self.max_fan_speed * 0.2
-                self.subsystem_temperatures[i] -= float(fan_speed * base)
+                self.subsystem_temperatures[i] -= float(fan_speed * base * mult)
             # If temp above 75 degrees, run fans at 100% max speed
-            elif temp > 75:
-                self.subsystem_temperatures[i] -= float(self.max_fan_speed * base)
+            elif temperature > 75:
+                self.subsystem_temperatures[i] -= float(self.max_fan_speed * base * mult)
             # If temp is between [25, 75] degrees, run fans at a percentage of the maximum
             else:
-                pass
+                # fan speed = (max fan speed) * (0.2 + 0.8 * ((temperature - 25) /50))
+                fan_speed = self.max_fan_speed * (0.2 + 0.8 * ((temperature - 25) / 50))
+                self.subsystem_temperatures[i] -= float(fan_speed * base * mult)
                 
             
         
@@ -62,10 +71,17 @@ if __name__ == "__main__":
     """
     bot = Robot(10, 10, 300)
     print(bot)
-    for i in range(10):
-        bot.increase_system_temperature()
-    print(bot)
-    bot.decrease_system_temperature()
-    print(bot)
-    bot.decrease_system_temperature()
+    
+    # Testing increase/decrease temperature functions
+    while True:
+        command = input("u/d: ")
+        if command == "u":
+            bot.increase_system_temperature()
+            print(bot.subsystem_temperatures)
+        elif command == "d":
+            bot.decrease_system_temperature()
+            print(bot.subsystem_temperatures)
+        else:
+            break
+    
     print(bot)
